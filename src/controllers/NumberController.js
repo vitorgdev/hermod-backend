@@ -5,7 +5,7 @@ const Number = mongoose.model("Number");
 module.exports = {
   async index(req, res) {
     const { page = 1 } = req.query;
-    const numbers = await Number.paginate({}, { page, limit: 10 });
+    const numbers = await Number.paginate(req.body, { page, limit: 5 });
     return res.json(numbers);
   },
 
