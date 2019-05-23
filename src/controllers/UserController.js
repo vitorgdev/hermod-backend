@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const AutoIncrement = require("mongoose-sequence")(mongoose);
 
-const Number = mongoose.model("Number");
+const Number = mongoose.model("User");
 
 module.exports = {
   async index(req, res) {
@@ -28,7 +27,6 @@ module.exports = {
   },
 
   async destroy(req, res) {
-    Number.counterReset("number");
     await Number.findOneAndRemove(req.params.id);
     return res.json();
   }
