@@ -9,9 +9,10 @@ const NumberSchema = new mongoose.Schema({
   startedAt: { type: Date },
   endedAt: { type: Date },
   name: { type: String, required: true },
-  initials: { type: String, required: true }
+  initials: { type: String, required: true },
+  type: { type: String, required: true }
 });
-NumberSchema.plugin(AutoIncrement, { inc_field: "number" });
+NumberSchema.plugin(AutoIncrement, {id:'number_seq' ,inc_field: "number", reference_fields: ['type','name'] });
 NumberSchema.plugin(mongoosePaginate);
 
 mongoose.model("Number", NumberSchema);
