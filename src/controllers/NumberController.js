@@ -5,8 +5,7 @@ const Number = mongoose.model("Number");
 
 module.exports = {
   async index(req, res) {
-    const { page = 1 } = req.query;
-    const numbers = await Number.paginate(req.body, { page, limit: 5 });
+    const numbers = await Number.find(req.body);
     return res.json(numbers);
   },
 
@@ -28,8 +27,7 @@ module.exports = {
   },
 
   async destroy(req, res) {
-    Number.counterReset("number");
-    await Number.findOneAndRemove(req.params.id);
-    return res.json();
+    const deleted = await Number.findOneAndDelete(req.params.id);
+    return res.json(deleted);
   }
 };
