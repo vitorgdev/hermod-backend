@@ -4,7 +4,7 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const NumberSchema = new mongoose.Schema({
   number: { type: Number },
-  status: { type: String, default: "waiting" },
+  status: { type: String, default: "waitingg" },
   createdAt: { type: Date, default: Date.now() },
   startedAt: { type: Date },
   endedAt: { type: Date },
