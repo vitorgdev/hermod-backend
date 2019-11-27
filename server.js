@@ -16,6 +16,14 @@ mongoose.connect("mongodb://db:27017/hermod", {
 requireDir("./src/models");
 
 app.use("/v1", require("./src/routes"));
+
+app.get("/", (req, res) => {
+  return res.json({
+    appName: "Hermod API",
+    currentVersionApi: "v1",
+  })
+});
+
 console.log(process.env.APP_PORT);
 
 app.listen(process.env.APP_PORT);
