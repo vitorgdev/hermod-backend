@@ -14,7 +14,6 @@ mongoose.connect("mongodb://db:27017/hermod", {
 });
 
 requireDir("./src/models");
-
 app.use("/v1", require("./src/routes"));
 
 app.get("/", (req, res) => {
@@ -24,7 +23,13 @@ app.get("/", (req, res) => {
   })
 });
 
-console.log(process.env.APP_PORT);
+function errorHandler(err, req, res, next) {
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(500);
+  res.render('error', { error: err });
+}
 
 app.listen(process.env.APP_PORT);
 

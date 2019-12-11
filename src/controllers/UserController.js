@@ -1,32 +1,34 @@
 const mongoose = require("mongoose");
 
-const Number = mongoose.model("User");
+const User = mongoose.model("User");
+
+const Response = require("../helpers/response");
 
 module.exports = {
   async index(req, res) {
-    const numbers = await Number.find(req.body);
-    return res.json(numbers);
+    const users = await User.find(req.body);
+    return res.json(users);
   },
 
   async show(req, res) {
-    const numbers = await Number.findById(req.params.id);
-    return res.json(numbers);
+    const users = await User.findById(req.params.id);
+    return res.json(users);
   },
 
   async store(req, res) {
-    const numbers = await Number.create(req.body);
-    return res.json(numbers);
+    const users = await User.create(req.body);
+    return res.json(users);
   },
 
   async update(req, res) {
-    const number = await Number.findOneAndUpdate(req.params.id, req.body, {
+    const user = await User.findOneAndUpdate(req.params.id, req.body, {
       new: true
     });
-    return res.json(number);
+    return res.json(user);
   },
 
   async destroy(req, res) {
-    const deleted = await Number.findOneAndDelete(req.params.id);
-    return res.json(deleted);
+    const deleted = await User.findOneAndDelete({ _id: req.params.id });
+    Response.sendResponse(deleted, res);
   }
 };
