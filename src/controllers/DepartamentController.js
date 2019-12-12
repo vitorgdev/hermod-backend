@@ -1,66 +1,123 @@
 const mongoose = require("mongoose");
 
-const Departament = mongoose.model("Departament");
+const Model = mongoose.model("Departament");
 const Queue = mongoose.model("Queue");
-const Owner = mongoose.model("User");
+const User = mongoose.model("User");
 
-const Response = require("../helpers/response");
+const { validate } = require("../helpers/response");
 
 const Entity = "departament";
 
 module.exports = {
   async index(req, res) {
+    const departaments = await Model.find(req.body).populate('queue').populate('owners');
     try {
-      const departaments = await Departament.find(req.body).populate('queue');
-      throw new Error('something bad happened');
+      let result = await validate(departaments, Entity);
+      res.json(result)
     } catch (error) {
-      res.json("teste")
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
     }
-    const departaments = await Departament.find(req.body).populate('queue');
-    return res.json(departaments);
   },
 
   async show(req, res) {
-    const departament = await Departament.findById(req.params.id).populate('queue');
-    Response.sendResponse(departament, res, Entity);
+    try {
+      let departament = null
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        departament = await Model.findById(req.params.id);
+      }
+      let result = await validate(departament, Entity);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
 
   async store(req, res) {
-    const departaments = await Departament.create(req.body);
-    Response.sendResponse(departaments, res, Entity);
+    const departaments = await Model.create(req.body);
+    try {
+      let result = await validate(departaments, Entity);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
 
   async storeQueue(req, res) {
-    const queue = await Queue.create(req.body);
-    const departaments = await Departament.findById(req.params.id);
-    departaments.queue.push(queue);
-    await departaments.save();
-    Response.sendResponse(departaments, res, Entity);
+    try {
+      let departament = null
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        departament = await Model.findById(req.params.id);
+      }
+      let result = await validate(departament, Entity);
+      const queue = await Queue.create(req.body);
+      resultQueue = await validate(queue, "queue");
+      departament.queue.push(queue);
+      await departament.save();
+      res.json(result)
+    } catch (error) {
+      console.log(error);
+
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
 
   async storeOwner(req, res) {
     if (req.body.ownerId) {
-      const departaments = await Departament.findById(req.params.id);
-      if (departaments === null) Response.sendResponse(departaments, res, Entity);
-      const owner = await Departament.findById(req.body.ownerId);
-      if (owner === null) Response.sendResponse(owner, res, `User`);
-      departaments.owner.push(req.body.ownerId);
-      await departaments.save();
-      Response.sendResponse(departaments, res, Entity);
-    } else {
-      Response.sendResponse(null, res, Entity);
+      try {
+        let departament = null
+        let owner = null
+        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+          departament = await Model.findById(req.params.id);
+        }
+        if (mongoose.Types.ObjectId.isValid(req.body.ownerId)) {
+          owner = await User.findById(req.body.ownerId);
+        }
+        let result = await validate(departament, Entity);
+        await validate(owner, "owner");
+
+        departament.owners.push(owner);
+        owner.departaments.push(departament);
+        await departament.save();
+        await owner.save();
+        res.json(result)
+      } catch (error) {
+        let result = JSON.parse(error.message)
+        res.status(result.statusCode).json(result);
+      }
     }
   },
 
   async update(req, res) {
-    const departament = await Departament.findOneAndUpdate({ _id: req.params.id }, req.body, {
-      new: true
-    });
-    Response.sendResponse(departament, res, Entity);
+    try {
+      let departament = null
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        departament = await Model.findOneAndUpdate({ _id: req.params.id }, req.body, {
+          new: true
+        });
+      }
+      let result = await validate(departament, Entity);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
 
   async destroy(req, res) {
-    const deleted = await Departament.findOneAndDelete({ _id: req.params.id });
-    Response.sendResponse(deleted, res, Entity);
+    try {
+      let resultQuery = null
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        resultQuery = await Model.findOneAndDelete({ _id: req.params.id });
+      }
+      let result = await validate(resultQuery, Entity);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   }
 };

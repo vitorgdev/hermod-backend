@@ -1,35 +1,19 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const requireDir = require("require-dir");
 const cors = require("cors");
+
+const db = require("./src/config/db")
+const routes = require("./src/routes")
+
 require('dotenv').config({
   path: process.env.NODE_ENV === "test" ? ".env.testing" : ".env"
 })
+
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect("mongodb://db:27017/hermod", {
-  useNewUrlParser: true
-});
-
-requireDir("./src/models");
-app.use("/v1", require("./src/routes"));
-
-app.get("/", (req, res) => {
-  return res.json({
-    appName: "Hermod API",
-    currentVersionApi: "v1",
-  })
-});
-
-function errorHandler(err, req, res, next) {
-  if (res.headersSent) {
-    return next(err);
-  }
-  res.status(500);
-  res.render('error', { error: err });
-}
+db.connect();
+routes.register(app);
 
 app.listen(process.env.APP_PORT);
 

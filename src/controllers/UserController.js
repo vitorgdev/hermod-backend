@@ -1,34 +1,76 @@
 const mongoose = require("mongoose");
 
-const User = mongoose.model("User");
+const Model = mongoose.model("User");
 
-const Response = require("../helpers/response");
+const { validate } = require("../helpers/response");
+
+const Entity = "departament";
 
 module.exports = {
+
   async index(req, res) {
-    const users = await User.find(req.body);
-    return res.json(users);
+    const resultQuery = await Model.find(req.body).populate('departaments');
+    try {
+      let result = await validate(resultQuery, Entity);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
 
   async show(req, res) {
-    const users = await User.findById(req.params.id);
-    return res.json(users);
+    try {
+      let resultQuery = null
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        resultQuery = await Model.findById(req.params.id);
+      }
+      let result = await validate(resultQuery, Entity);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
 
   async store(req, res) {
-    const users = await User.create(req.body);
-    return res.json(users);
+    const resultQuery = await Model.create(req.body);
+    try {
+      let result = await validate(resultQuery, Entity);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
-
   async update(req, res) {
-    const user = await User.findOneAndUpdate(req.params.id, req.body, {
-      new: true
-    });
-    return res.json(user);
+    try {
+      let resultQuery = null
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        resultQuery = await Model.findOneAndUpdate({ _id: req.params.id }, req.body, {
+          new: true
+        });
+      }
+      let result = await validate(resultQuery, Entity);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
 
   async destroy(req, res) {
-    const deleted = await User.findOneAndDelete({ _id: req.params.id });
-    Response.sendResponse(deleted, res);
+
+    try {
+      let resultQuery = null
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        resultQuery = await Model.findOneAndDelete({ _id: req.params.id });
+      }
+      let result = await validate(resultQuery, Entity);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   }
 };

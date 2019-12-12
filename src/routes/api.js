@@ -1,8 +1,8 @@
 const express = require("express");
 const routes = express.Router();
 
-const UserController = require("./controllers/UserController");
-const DepartamentController = require("./controllers/DepartamentController");
+const UserController = require("../controllers/UserController");
+const DepartamentController = require("../controllers/DepartamentController");
 
 routes.get("/", (req, res) => {
     return res.json("Version 1 of HERMOD API is on")
@@ -21,10 +21,5 @@ routes.post("/departaments/:id/queue", DepartamentController.storeQueue);
 routes.post("/departaments/:id/owner", DepartamentController.storeOwner);
 routes.put("/departaments/:id", DepartamentController.update);
 routes.delete("/departaments/:id", DepartamentController.destroy);
-
-
-routes.get("/users/apa/apa", (req, res, next) => {
-    res.json("apa")
-});
 
 module.exports = routes;
