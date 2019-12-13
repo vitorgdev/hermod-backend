@@ -52,10 +52,15 @@ module.exports = {
         departament = await Model.findById(req.params.id);
       }
       let result = await validate(departament, Entity);
-      const queue = await Queue.create(req.body);
-      resultQueue = await validate(queue, "queue");
+      let queue = await Queue.create(req.body);
+      if (mongoose.Types.ObjectId.isValid(queue._id)) {
+        queue = await Queue.findById(queue._id);
+      }
+      await validate(queue, "queue");
       departament.queue.push(queue);
       await departament.save();
+      queue.departament = departament;
+      await queue.save();
       res.json(result)
     } catch (error) {
       console.log(error);
