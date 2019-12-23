@@ -4,14 +4,10 @@ WORKDIR /node-app
 
 COPY package.json .
 
-RUN npm install --quiet
-
-RUN npm install nodemon -g --quiet
-
-RUN npm install mocha -g --quiet
+RUN npm install
 
 COPY . . 
 
-EXPOSE 9000
+EXPOSE 3000
 
-CMD nodemon -L --watch . server.js
+CMD yarn dev

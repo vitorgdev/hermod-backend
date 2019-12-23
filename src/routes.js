@@ -5,6 +5,10 @@ const NumberController = require("./controllers/NumberController");
 const UserController = require("./controllers/UserController");
 const CourseController = require("./controllers/CourseController");
 
+routes.get("/", (req, res) => {
+    return res.json("Version 1 of HERMOD API is on")
+});
+
 routes.get("/numbers", NumberController.index);
 routes.get("/numbers/:id", NumberController.show);
 routes.post("/numbers", NumberController.store);

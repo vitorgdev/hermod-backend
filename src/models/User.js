@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const mongoosePaginate = require("mongoose-paginate");
 
 const CourseSchema = new mongoose.Schema(
   {
@@ -17,7 +16,5 @@ const UserSchema = new mongoose.Schema({
   stats: { type: Boolean, required: true, default: true },
   courses: [CourseSchema]
 });
-
-UserSchema.plugin(mongoosePaginate);
 
 mongoose.model("User", UserSchema);
