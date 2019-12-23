@@ -1,5 +1,5 @@
 
-const names = ["John", "Joanne", "Bob", "Will", "Chris", "Mike", "Anna", "Jack", "Peter", "Paul"];
+const names = ["john", "joanne", "bob", "will", "chris", "mike", "anna", "jack", "peter", "paul"];
 const min = 18;
 const max = 100;
 

@@ -2,11 +2,11 @@ var capitalize = require('capitalize')
 
 module.exports = {
   async validate(data, entity, code = null, message = null, statusCode = null) {
-    if (data === null) {
+    if (data === null || data === false) {
       var data = {
         statusCode: 404,
         data: data,
-        message: `${capitalize(entity)} ${process.env.MESSAGE_NOT_FOUND}`,
+        message: message ? message : `${capitalize(entity)} ${process.env.MESSAGE_NOT_FOUND}`,
         entity: entity,
         code: process.env.CODE_NOT_FOUND
       }
@@ -31,4 +31,15 @@ module.exports = {
     }
     return data;
   },
+
+  async setCustomError(data, entity, code, message, statusCode) {
+    var data = {
+      statusCode: statusCode,
+      data: data,
+      message: message,
+      entity: entity,
+      code: code
+    }
+    return data;
+  }
 };
