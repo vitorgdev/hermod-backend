@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --exit",
     "dev": "nodemon -L --watch . server.js",
     "start": "node server.js",
     "seed": "seed -u 'mongodb+srv://hermod:hermod123@hermod-ncck5.mongodb.net/test?retryWrites=true&w=majority' --drop-database ./data-import"
