@@ -1,32 +1,76 @@
 const mongoose = require("mongoose");
 
-const Number = mongoose.model("User");
+const Model = mongoose.model("User");
+
+const { validate } = require("../helpers/response");
+
+const Entity = "user";
 
 module.exports = {
+
   async index(req, res) {
-    const numbers = await Number.find(req.body);
-    return res.json(numbers);
+    const resultQuery = await Model.find(req.body).populate('departaments');
+    try {
+      let result = await validate(resultQuery, Entity, process.env.CODE_FOUND, process.env.MESSAGE_FOUND);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
 
   async show(req, res) {
-    const numbers = await Number.findById(req.params.id);
-    return res.json(numbers);
+    try {
+      let resultQuery = null
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        resultQuery = await Model.findById(req.params.id);
+      }
+      let result = await validate(resultQuery, Entity, process.env.CODE_FOUND, process.env.MESSAGE_FOUND);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
 
   async store(req, res) {
-    const numbers = await Number.create(req.body);
-    return res.json(numbers);
+    const resultQuery = await Model.create(req.body);
+    try {
+      let result = await validate(resultQuery, Entity, process.env.CODE_CREATED, process.env.MESSAGE_CREATED);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
-
   async update(req, res) {
-    const number = await Number.findOneAndUpdate(req.params.id, req.body, {
-      new: true
-    });
-    return res.json(number);
+    try {
+      let resultQuery = null
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        resultQuery = await Model.findOneAndUpdate({ _id: req.params.id }, req.body, {
+          new: true
+        });
+      }
+      let result = await validate(resultQuery, Entity, process.env.CODE_UPDATED, process.env.MESSAGE_UPDATED);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   },
 
   async destroy(req, res) {
-    const deleted = await Number.findOneAndDelete(req.params.id);
-    return res.json(deleted);
+
+    try {
+      let resultQuery = null
+      if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        resultQuery = await Model.findOneAndDelete({ _id: req.params.id });
+      }
+      let result = await validate(resultQuery, Entity, process.env.CODE_DELETED, process.env.MESSAGE_DELETED);
+      res.json(result)
+    } catch (error) {
+      let result = JSON.parse(error.message)
+      res.status(result.statusCode).json(result);
+    }
   }
 };

@@ -9,7 +9,7 @@ let chaiHttp = require('chai-http');
 let server = require('../server');
 let should = chai.should();
 
-const dataProvider = ["createdAt", "stats", "_id", "username", "name", "password", "courses"];
+const dataProvider = ["createdAt", "stats", "_id", "username", "name", "password", "departaments"];
 
 chai.use(chaiHttp);
 //Our parent block
@@ -31,8 +31,8 @@ describe('/POST user', () => {
             .end((err, res) => {
                 res.should.have.status(200);
                 dataProvider.forEach(element => {
-                    userCreated = res.body;
-                    res.body.should.have.own.property(element);
+                    userCreated = res.body.data;
+                    res.body.data.should.have.own.property(element);
                 });
                 done();
             });
@@ -46,7 +46,7 @@ describe('/POST user', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     dataProvider.forEach(element => {
-                        res.body.should.have.own.property(element);
+                        res.body.data.should.have.own.property(element);
                     });
                     done();
                 });
@@ -58,19 +58,17 @@ describe('/POST user', () => {
                     name: "Vitor2",
                     password: "1232"
                 }
-                console.log(userCreated._id);
-
                 chai.request(server)
                     .put(`/v1/users/${userCreated._id}`)
                     .send(userUpdated)
                     .end((err, res) => {
                         res.should.have.status(200);
                         dataProvider.forEach(element => {
-                            res.body.should.have.own.property(element);
+                            res.body.data.should.have.own.property(element);
                         });
                         for (const key in userUpdated) {
                             if (userUpdated.hasOwnProperty(key)) {
-                                res.body[key].should.to.equal(userUpdated[key])
+                                res.body.data[key].should.to.equal(userUpdated[key])
                             }
                         }
                         done();
@@ -84,7 +82,7 @@ describe('/POST user', () => {
                         .end((err, res) => {
                             res.should.have.status(200);
                             dataProvider.forEach(element => {
-                                res.body[0].should.have.own.property(element);
+                                res.body.data[0].should.have.own.property(element);
                             });
                             done();
                         });
@@ -98,7 +96,7 @@ describe('/POST user', () => {
                             .end((err, res) => {
                                 res.should.have.status(200);
                                 dataProvider.forEach(element => {
-                                    res.body.should.have.own.property(element);
+                                    res.body.data.should.have.own.property(element);
                                 });
                                 done();
                             });
