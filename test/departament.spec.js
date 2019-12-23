@@ -31,11 +31,10 @@ describe('/POST departament', () => {
                     created = res.body.data;
                     created.should.have.own.property(element);
                 });
+
                 done();
             });
-    });
-
-
+    }).timeout(4000)
     describe('/GET course', function () {
         it(`it should GET a one course`, function (done) {
             chai.request(server)
@@ -47,7 +46,7 @@ describe('/POST departament', () => {
                     });
                     done();
                 });
-        });
+        }).timeout(4000);
         describe('/PUT course', function () {
             it(`it should UPDATE a one course`, function (done) {
                 let courseUpdated = {
@@ -83,7 +82,7 @@ describe('/POST departament', () => {
                             });
                             done();
                         });
-                });
+                }).timeout(4000);
                 describe('/DELETE course', function () {
                     it(`it should DELETE a one course`, function (done) {
                         chai.request(server)
