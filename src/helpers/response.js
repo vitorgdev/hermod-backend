@@ -1,32 +1,32 @@
 var capitalize = require('capitalize')
 
 module.exports = {
-  async validate(data, entity, statusCode = null) {
+  async validate(data, entity, code = null, message = null, statusCode = null) {
     if (data === null) {
       var data = {
         statusCode: 404,
         data: data,
-        message: `${capitalize(entity)} not found`,
+        message: `${capitalize(entity)} ${process.env.MESSAGE_NOT_FOUND}`,
         entity: entity,
-        code: `ITEM_NOT_FOUND`
+        code: process.env.CODE_NOT_FOUND
       }
       throw new Error(JSON.stringify(data));
     } else if (data.length === 0) {
       var data = {
         statusCode: 404,
         data: data,
-        message: `${capitalize(entity)} is empty`,
+        message: `${capitalize(entity)} ${process.env.MESSAGE_EMPTY}`,
         entity: entity,
-        code: `ITEM_IS_EMPTY`
+        code: process.env.CODE_IS_EMPTY
       }
       throw new Error(JSON.stringify(data));
     } else {
       var data = {
         statusCode: 200,
         data: data,
-        message: `${capitalize(entity)} found`,
+        message: `${capitalize(entity)} ${message}`,
         entity: entity,
-        code: `FOUND`
+        code: code
       }
     }
     return data;

@@ -12,7 +12,7 @@ module.exports = {
   async index(req, res) {
     const departaments = await Model.find(req.body).populate('queue').populate('owners');
     try {
-      let result = await validate(departaments, Entity);
+      let result = await validate(departaments, Entity, process.env.CODE_FOUND, process.env.MESSAGE_FOUND);
       res.json(result)
     } catch (error) {
       let result = JSON.parse(error.message)
@@ -26,7 +26,7 @@ module.exports = {
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
         departament = await Model.findById(req.params.id);
       }
-      let result = await validate(departament, Entity);
+      let result = await validate(departament, Entity, process.env.CODE_FOUND, process.env.MESSAGE_FOUND);
       res.json(result)
     } catch (error) {
       let result = JSON.parse(error.message)
@@ -37,7 +37,7 @@ module.exports = {
   async store(req, res) {
     const departaments = await Model.create(req.body);
     try {
-      let result = await validate(departaments, Entity);
+      let result = await validate(departaments, Entity, process.env.CODE_CREATED, process.env.MESSAGE_CREATED);
       res.json(result)
     } catch (error) {
       let result = JSON.parse(error.message)
@@ -51,7 +51,7 @@ module.exports = {
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
         departament = await Model.findById(req.params.id);
       }
-      let result = await validate(departament, Entity);
+      let result = await validate(departament, Entity, process.env.CODE_CREATED, process.env.MESSAGE_CREATED);
       let queue = await Queue.create(req.body);
       if (mongoose.Types.ObjectId.isValid(queue._id)) {
         queue = await Queue.findById(queue._id);
@@ -104,7 +104,7 @@ module.exports = {
           new: true
         });
       }
-      let result = await validate(departament, Entity);
+      let result = await validate(departament, Entity, process.env.CODE_UPDATED, process.env.MESSAGE_UPDATED);
       res.json(result)
     } catch (error) {
       let result = JSON.parse(error.message)
@@ -118,7 +118,7 @@ module.exports = {
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
         resultQuery = await Model.findOneAndDelete({ _id: req.params.id });
       }
-      let result = await validate(resultQuery, Entity);
+      let result = await validate(resultQuery, Entity, process.env.CODE_DELETED, process.env.MESSAGE_DELETED);
       res.json(result)
     } catch (error) {
       let result = JSON.parse(error.message)

@@ -4,14 +4,14 @@ const Model = mongoose.model("User");
 
 const { validate } = require("../helpers/response");
 
-const Entity = "departament";
+const Entity = "user";
 
 module.exports = {
 
   async index(req, res) {
     const resultQuery = await Model.find(req.body).populate('departaments');
     try {
-      let result = await validate(resultQuery, Entity);
+      let result = await validate(resultQuery, Entity, process.env.CODE_FOUND, process.env.MESSAGE_FOUND);
       res.json(result)
     } catch (error) {
       let result = JSON.parse(error.message)
@@ -25,7 +25,7 @@ module.exports = {
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
         resultQuery = await Model.findById(req.params.id);
       }
-      let result = await validate(resultQuery, Entity);
+      let result = await validate(resultQuery, Entity, process.env.CODE_FOUND, process.env.MESSAGE_FOUND);
       res.json(result)
     } catch (error) {
       let result = JSON.parse(error.message)
@@ -36,7 +36,7 @@ module.exports = {
   async store(req, res) {
     const resultQuery = await Model.create(req.body);
     try {
-      let result = await validate(resultQuery, Entity);
+      let result = await validate(resultQuery, Entity, process.env.CODE_CREATED, process.env.MESSAGE_CREATED);
       res.json(result)
     } catch (error) {
       let result = JSON.parse(error.message)
@@ -51,7 +51,7 @@ module.exports = {
           new: true
         });
       }
-      let result = await validate(resultQuery, Entity);
+      let result = await validate(resultQuery, Entity, process.env.CODE_UPDATED, process.env.MESSAGE_UPDATED);
       res.json(result)
     } catch (error) {
       let result = JSON.parse(error.message)
@@ -66,7 +66,7 @@ module.exports = {
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
         resultQuery = await Model.findOneAndDelete({ _id: req.params.id });
       }
-      let result = await validate(resultQuery, Entity);
+      let result = await validate(resultQuery, Entity, process.env.CODE_DELETED, process.env.MESSAGE_DELETED);
       res.json(result)
     } catch (error) {
       let result = JSON.parse(error.message)

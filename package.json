@@ -7,7 +7,7 @@
     "test": "mocha",
     "dev": "nodemon -L --watch . server.js",
     "start": "node server.js",
-    "seed": "seed -u 'mongodb://db:27017/hermod' --drop-database ./data-import"
+    "seed": "seed -u 'mongodb+srv://hermod:hermod123@hermod-ncck5.mongodb.net/test?retryWrites=true&w=majority' --drop-database ./data-import"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "express-api-error-handler": "^1.1.0",
     "mongo-seeding-cli": "^3.4.0-alpha.1",
     "mongoose": ">=5.7.5",
+    "mongoose-paginate": "^5.0.3",
     "mongoose-sequence": "^5.0.1",
     "require-dir": "^1.2.0"
   },
