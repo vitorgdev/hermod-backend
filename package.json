@@ -13,16 +13,19 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "capitalize": "^2.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.16.4",
     "express-api-error-handler": "^1.1.0",
+    "jsonwebtoken": "^8.5.1",
     "mongo-seeding-cli": "^3.4.0-alpha.1",
     "mongoose": ">=5.7.5",
     "mongoose-paginate": "^5.0.3",
     "mongoose-sequence": "^5.0.1",
-    "require-dir": "^1.2.0"
+    "require-dir": "^1.2.0",
+    "validator": "^12.1.0"
   },
   "devDependencies": {
     "chai": "^4.2.0",
