@@ -8,7 +8,7 @@ stages:
 test with mocha:
   stage: test
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key: modules
     policy: push
     paths:
       - ./node_modules
@@ -20,7 +20,7 @@ test with mocha:
 vulnerabilities check:
   stage: test
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key: modules
     policy: pull
     paths:
       - ./node_modules
