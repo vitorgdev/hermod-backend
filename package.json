@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --exit",
+    "scan": "snyk test",
     "dev": "nodemon -L --watch . server.js",
     "start": "node server.js",
     "seed": "seed -u 'mongodb+srv://hermod:hermod123@hermod-ncck5.mongodb.net/test?retryWrites=true&w=majority' --drop-database ./data-import"
@@ -31,6 +32,7 @@
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
     "mocha": "^6.2.2",
-    "nodemon": "^1.18.11"
+    "nodemon": "^1.18.11",
+    "snyk": "^1.290.1"
   }
 }
