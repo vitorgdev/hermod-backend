@@ -11,7 +11,7 @@ test with mocha:
     key: modules
     policy: push
     paths:
-      - ./node_modules
+      - node_modules/
   before_script:
     - yarn install
   script:
@@ -23,7 +23,7 @@ vulnerabilities check:
     key: modules
     policy: pull
     paths:
-      - ./node_modules
+      - node_modules/
   script:
     - yarn scan
 # build hermod: &build
