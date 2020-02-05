@@ -10,7 +10,12 @@ const Entity = "departament";
 
 module.exports = {
   async index(req, res) {
-    const departaments = await Model.find(req.body)
+    if (req.query.hasOwnProperty("name")) {
+      req.query.name = {
+        $regex: new RegExp(`.*${req.query.name}.*`, "i")
+      };
+    }
+    const departaments = await Model.find(req.query)
       .populate("queue")
       .populate("owners");
     try {
@@ -122,6 +127,8 @@ module.exports = {
     try {
       let departament = null;
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+        console.log(req.body);
+
         departament = await Model.findOneAndUpdate(
           { _id: req.params.id },
           req.body,
