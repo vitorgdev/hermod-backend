@@ -1,60 +1,22 @@
 const mongoose = require("mongoose");
 
-const Model = mongoose.model("User");
+const Model = mongoose.model("Module");
 
-const { generateToken } = require("../helpers/jwt");
+const { validate } = require("../helpers/response");
 
-const { validate, setCustomError } = require("../helpers/response");
-
-const Entity = "user";
+const Entity = "module";
 
 module.exports = {
-  async login(req, res) {
-    const resultQuery = await Model.findOne({ username: req.body.username });
-    try {
-      await validate(resultQuery, Entity, process.env.CODE_FOUND);
-    } catch (error) {
-      let result = JSON.parse(error.message);
-      res.status(result.statusCode).json(result);
-    }
-    const isPasswordMatch = resultQuery.password === req.body.password;
-    if (!isPasswordMatch) {
-      let error = await setCustomError(
-        null,
-        Entity,
-        null,
-        "Wrong password",
-        400
-      );
-      res.status(400).json(error);
-    }
-    if (resultQuery.status === true) {
-      const token = await generateToken(resultQuery);
-      resultQuery.auth.token = token;
-      await resultQuery.save();
-      res.json(await validate(resultQuery, Entity, process.env.CODE_FOUND));
-    } else {
-      let error = await setCustomError(
-        null,
-        Entity,
-        null,
-        "Your user is inactive",
-        400
-      );
-      res.status(400).json(error);
-    }
-  },
-
   async index(req, res) {
     if (req.query.hasOwnProperty("name")) {
       req.query.name = {
         $regex: new RegExp(`.*${req.query.name}.*`, "i")
       };
     }
-    const resultQuery = await Model.find(req.query).populate("departaments");
+    const response = await Model.find(req.query);
     try {
       let result = await validate(
-        resultQuery,
+        response,
         Entity,
         process.env.CODE_FOUND,
         process.env.MESSAGE_FOUND
@@ -68,12 +30,12 @@ module.exports = {
 
   async show(req, res) {
     try {
-      let resultQuery = null;
+      let response = null;
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-        resultQuery = await Model.findById(req.params.id);
+        response = await Model.findById(req.params.id);
       }
       let result = await validate(
-        resultQuery,
+        response,
         Entity,
         process.env.CODE_FOUND,
         process.env.MESSAGE_FOUND
@@ -86,10 +48,10 @@ module.exports = {
   },
 
   async store(req, res) {
-    const resultQuery = await Model.create(req.body);
+    const response = await Model.create(req.body);
     try {
       let result = await validate(
-        resultQuery,
+        response,
         Entity,
         process.env.CODE_CREATED,
         process.env.MESSAGE_CREATED
@@ -100,11 +62,12 @@ module.exports = {
       res.status(result.statusCode).json(result);
     }
   },
+
   async update(req, res) {
     try {
-      let resultQuery = null;
+      let response = null;
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-        resultQuery = await Model.findOneAndUpdate(
+        response = await Model.findOneAndUpdate(
           { _id: req.params.id },
           req.body,
           {
@@ -113,7 +76,7 @@ module.exports = {
         );
       }
       let result = await validate(
-        resultQuery,
+        response,
         Entity,
         process.env.CODE_UPDATED,
         process.env.MESSAGE_UPDATED
@@ -127,12 +90,12 @@ module.exports = {
 
   async destroy(req, res) {
     try {
-      let resultQuery = null;
+      let response = null;
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-        resultQuery = await Model.findOneAndDelete({ _id: req.params.id });
+        response = await Model.findOneAndDelete({ _id: req.params.id });
       }
       let result = await validate(
-        resultQuery,
+        response,
         Entity,
         process.env.CODE_DELETED,
         process.env.MESSAGE_DELETED

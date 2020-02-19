@@ -127,8 +127,6 @@ module.exports = {
     try {
       let departament = null;
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-        console.log(req.body);
-
         departament = await Model.findOneAndUpdate(
           { _id: req.params.id },
           req.body,
