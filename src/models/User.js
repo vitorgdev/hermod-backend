@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
     expires: { type: String }
   },
   departaments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Departament" }],
-  profile: [{ type: mongoose.Schema.Types.ObjectId, ref: "Profile" }]
+  profile: { type: mongoose.Schema.Types.ObjectId, ref: "Profile" }
 });
 
 mongoose.model("User", UserSchema);

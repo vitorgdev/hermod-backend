@@ -2,6 +2,8 @@ const mongoose = require("mongoose");
 
 const Model = mongoose.model("User");
 
+const Module = mongoose.model("Module");
+
 const { generateToken } = require("../helpers/jwt");
 
 const { validate, setCustomError } = require("../helpers/response");
@@ -51,7 +53,12 @@ module.exports = {
         $regex: new RegExp(`.*${req.query.name}.*`, "i")
       };
     }
-    const resultQuery = await Model.find(req.query).populate("departaments");
+    const resultQuery = await Model.find(req.query).populate({
+      path: "profile",
+      populate: {
+        path: "profileModule.module"
+      }
+    });
     try {
       let result = await validate(
         resultQuery,

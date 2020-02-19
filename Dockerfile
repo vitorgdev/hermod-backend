@@ -1,10 +1,10 @@
-FROM node:11-alpine
+FROM node:12
 
 WORKDIR /node-app
 
 COPY package.json .
 
-RUN npm install
+RUN yarn install
 
 COPY . . 
 
