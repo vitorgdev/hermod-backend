@@ -12,7 +12,12 @@ const Entity = "user";
 
 module.exports = {
   async login(req, res) {
-    const resultQuery = await Model.findOne({ username: req.body.username });
+    const resultQuery = await Model.findOne({ username: req.body.username }).populate({
+      path: "profile",
+      populate: {
+        path: "profileModule.module"
+      }
+    });;
     try {
       await validate(resultQuery, Entity, process.env.CODE_FOUND);
     } catch (error) {
