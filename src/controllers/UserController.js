@@ -12,12 +12,14 @@ const Entity = "user";
 
 module.exports = {
   async login(req, res) {
-    const resultQuery = await Model.findOne({ username: req.body.username }).populate({
+    const resultQuery = await Model.findOne({
+      username: req.body.username
+    }).populate({
       path: "profile",
       populate: {
         path: "profileModule.module"
       }
-    });;
+    });
     try {
       await validate(resultQuery, Entity, process.env.CODE_FOUND);
     } catch (error) {
@@ -58,6 +60,11 @@ module.exports = {
         $regex: new RegExp(`.*${req.query.name}.*`, "i")
       };
     }
+    if (req.query.hasOwnProperty("token")) {
+      req.query.auth = { token: req.query.token };
+      delete req.query.token;
+    }
+
     const resultQuery = await Model.find(req.query).populate({
       path: "profile",
       populate: {
@@ -71,6 +78,9 @@ module.exports = {
         process.env.CODE_FOUND,
         process.env.MESSAGE_FOUND
       );
+      if (req.query.hasOwnProperty("auth"))
+        result.data = result.data[0]
+
       res.json(result);
     } catch (error) {
       let result = JSON.parse(error.message);
