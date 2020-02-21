@@ -112,7 +112,12 @@ module.exports = {
       delete req.query.token;
       try {
         let resultQuery = null;
-        resultQuery = await Model.findOne(req.query);
+        resultQuery = await Model.findOne(req.query).populate({
+          path: "profile",
+          populate: {
+            path: "profileModule.module"
+          }
+        });
         let result = await validate(
           resultQuery,
           Entity,
