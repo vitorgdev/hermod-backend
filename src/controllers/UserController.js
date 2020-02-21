@@ -78,8 +78,7 @@ module.exports = {
         process.env.CODE_FOUND,
         process.env.MESSAGE_FOUND
       );
-      if (req.query.hasOwnProperty("auth"))
-        result.data = result.data[0]
+      if (req.query.hasOwnProperty("auth")) result.data = result.data[0];
 
       res.json(result);
     } catch (error) {
@@ -104,6 +103,36 @@ module.exports = {
     } catch (error) {
       let result = JSON.parse(error.message);
       res.status(result.statusCode).json(result);
+    }
+  },
+
+  async checkAuth(req, res) {
+    if (req.query.hasOwnProperty("token")) {
+      req.query.auth = { token: req.query.token };
+      delete req.query.token;
+      try {
+        let resultQuery = null;
+        resultQuery = await Model.findOne(req.query);
+        let result = await validate(
+          resultQuery,
+          Entity,
+          process.env.CODE_FOUND,
+          process.env.MESSAGE_FOUND
+        );
+        res.json(result);
+      } catch (error) {
+        let result = JSON.parse(error.message);
+        res.status(result.statusCode).json(result);
+      }
+    } else {
+      let error = await setCustomError(
+        null,
+        Entity,
+        null,
+        "Please send correct params",
+        406
+      );
+      res.status(406).json(error);
     }
   },
 

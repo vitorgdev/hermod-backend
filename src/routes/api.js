@@ -13,7 +13,7 @@ routes.get("/", (req, res) => {
 routes.get("/users", UserController.index);
 routes.get("/users/:id", UserController.show);
 routes.post("/users", UserController.store);
-// routes.post("/users/login", UserController.login);
+routes.get("/check", UserController.checkAuth);
 routes.put("/users/:id", UserController.update);
 routes.delete("/users/:id", UserController.destroy);
 routes.patch("/users/:id", UserController.update);
