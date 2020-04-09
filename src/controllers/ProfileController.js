@@ -71,6 +71,8 @@ module.exports = {
   async update(req, res) {
     try {
       let response = null;
+      console.log(req.body.profileModule[0].module);
+
       if (mongoose.Types.ObjectId.isValid(req.params.id)) {
         response = await Model.findOneAndUpdate(
           { _id: req.params.id },
@@ -78,7 +80,10 @@ module.exports = {
           {
             new: true
           }
-        );
+        ).populate({
+          path: "profileModule.module",
+          model: Module
+        });
       }
       let result = await validate(
         response,
