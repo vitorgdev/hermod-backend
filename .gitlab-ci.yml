@@ -1,95 +1,25 @@
-image: node
+image: node:latest # (1)
 
 stages:
-  - test
-  - package
-  - deploy
+  - build
+  - aws-deploy
 
-test with mocha:
-  stage: test
-  cache:
-    key: modules
-    policy: push
+cache:
+  paths:
+    - node_modules/ # (2)
+
+install_dependencies:
+  stage: build
+  script:
+    - npm install # (3)
+  artifacts:
     paths:
       - node_modules/
+
+aws-deploy:
+  image: 'python:latest'
+  stage: aws-deploy
   before_script:
-    - yarn install
+    - 'pip install awsebcli --upgrade' # (6)
   script:
-    - yarn test
-
-vulnerabilities check:
-  stage: test
-  cache:
-    key: modules
-    policy: pull
-    paths:
-      - node_modules/
-  script:
-    - yarn scan
-# build hermod: &build
-#   stage: package
-#   cache:
-#     key: site-package
-#     policy: push
-#     paths:
-#       - ./dist
-#     key: ${CI_COMMIT_REF_SLUG}
-#     policy: pull
-#     paths:
-#       - ./node_modules
-#   artifacts:
-#     name: "$CI_JOB_NAME-$CI_COMMIT_REF_NAME"
-#     when: always
-#     expire_in: 2h20min
-#     paths:
-#       - ./dist
-#   script:
-#     - yarn build
-
-# deploy to develop: &deploy
-#   stage: deploy
-#   variables:
-#     CNAME: develop-hermod.surge.sh
-#     GIT_STRATEGY: none
-#   cache:
-#     key: site-package
-#     policy: pull
-#     paths:
-#       - ./dist
-#   before_script:
-#     - yarn global add surge
-#   script:
-#     - surge --project ./dist --domain ${CNAME}
-#   environment:
-#     name: develop
-#     url: http://${CNAME}
-#   only:
-#     - develop
-
-# deploy to release: &deploy-release
-#   <<: *deploy
-#   variables:
-#     CNAME: $CI_COMMIT_REF_SLUG.hermod.surge.sh
-#   environment:
-#     name: review/$CI_COMMIT_REF_SLUG
-#     on_stop: turnoff
-#   only:
-#     - /^release-.*$/
-
-# turnoff:
-#   <<: *deploy-release
-#   script:
-#     - surge teardown ${CNAME}
-#   when: manual
-#   environment:
-#     name: review/$CI_COMMIT_REF_SLUG
-#     action: stop
-
-# deploy to production:
-#   <<: *deploy
-#   variables:
-#     CNAME: hermod.surge.sh
-#   environment:
-#     name: production
-#   only:
-#     - master
+    - eb deploy BoraApi-env
