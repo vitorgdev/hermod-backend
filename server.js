@@ -7,6 +7,8 @@ db.connect();
 
 const routes = require("./src/routes");
 
+process.env.NODE_ENV = 'production';
+
 require('dotenv').config({
   path: process.env.NODE_ENV === "test" ? ".env.testing" : ".env.production"
 })
